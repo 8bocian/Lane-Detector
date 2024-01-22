@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 from cv2 import cv2
 import time
@@ -164,7 +166,10 @@ def main(path):
 
 if __name__ == '__main__':
     global image_height, image_width, n_channels_in_image, roi_upper_left_corner, roi_upper_right_corner, roi, transform_roi
-    path1 = r'Data/Videos/1.mp4'
-    path2 = r'Data/Videos/2.mp4'
-    path3 = r'Data/Videos/3.mp4'
-    main(path1)
+    parser = argparse.ArgumentParser(description="A script with --path argument")
+    parser.add_argument("--path", help="Specify the video path", required=True)
+
+    args = parser.parse_args()
+    path = args.path
+
+    main(path)
