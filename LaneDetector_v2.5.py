@@ -79,7 +79,7 @@ def processLines(binary_image):
             color = (0, 0, 255)
         cv2.polylines(example_image, [lane], False, color)
 
-    cv2.imshow('example', example_image)
+    # cv2.imshow('example', example_image)
 
     return lanes
 
@@ -124,44 +124,43 @@ def process(image):
 
 def main(path):
     global image_height, image_width, n_channels_in_image, roi_upper_left_corner, roi_upper_right_corner, roi, transform_roi
-    while 1:
-        video = cv2.VideoCapture(path)
-        total = time.time()
-        frames_counter = 0
-        while video.isOpened():
-            has_returned, frame = video.read()
-            if has_returned:
-                frames_counter += 1
-                start = time.time()
 
-                image_height, image_width, n_channels_in_image = np.array(frame).shape
+    video = cv2.VideoCapture(path)
+    total = time.time()
+    frames_counter = 0
+    while video.isOpened():
+        has_returned, frame = video.read()
+        if has_returned:
+            frames_counter += 1
+            start = time.time()
 
-                roi_upper_left_corner = (int(image_width / 2) - 100, int(image_height / 2) + 90)
-                roi_upper_right_corner = (int(image_width / 2) + 100, int(image_height / 2) + 90)
+            image_height, image_width, n_channels_in_image = np.array(frame).shape
 
-                roi = np.array([[(0, image_height),
-                                 roi_upper_left_corner,
-                                 roi_upper_right_corner,
-                                 (image_width, image_height)]], dtype=np.float32)
-                transform_roi = np.array([[0, image_height],
-                                          [0, 0],
-                                          [image_width, 0],
-                                          [image_width, image_height]], dtype=np.float32)
+            roi_upper_left_corner = (int(image_width / 2) - 100, int(image_height / 2) + 90)
+            roi_upper_right_corner = (int(image_width / 2) + 100, int(image_height / 2) + 90)
 
-                processed, perspective, image_canny = process(frame)
-                cv2.imshow('processed', processed)
-                cv2.imshow('canny', image_canny)
+            roi = np.array([[(0, image_height),
+                             roi_upper_left_corner,
+                             roi_upper_right_corner,
+                             (image_width, image_height)]], dtype=np.float32)
+            transform_roi = np.array([[0, image_height],
+                                      [0, 0],
+                                      [image_width, 0],
+                                      [image_width, image_height]], dtype=np.float32)
 
-                cv2.waitKey(1)
-                stop = time.time()
-                print(f"FPS: {1 / (stop - start)}")
-            else:
-                print(f"NUMBER OF FRAMES: {frames_counter}")
-                print(f"TIME: {time.time() - total}")
-                print(f"AVG FPS: {frames_counter / (time.time() - total)}")
-                break
+            processed, perspective, image_canny = process(frame)
+            cv2.imshow('processed', processed)
+            # cv2.imshow('canny', image_canny)
 
-        video.release()
+            cv2.waitKey(1)
+            stop = time.time()
+            print(f"FPS: {1 / (stop - start) + 1e-5}")
+        else:
+            print(f"NUMBER OF FRAMES: {frames_counter}")
+            print(f"TIME: {time.time() - total}")
+            break
+
+    video.release()
 
 
 if __name__ == '__main__':
