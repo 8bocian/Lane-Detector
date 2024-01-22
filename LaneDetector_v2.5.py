@@ -1,6 +1,3 @@
-#  Copyright (c) 2022. Oskar "Bocian" Możdżeń
-#  All rights reserved.
-
 import numpy as np
 from cv2 import cv2
 import time
